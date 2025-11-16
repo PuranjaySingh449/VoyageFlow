@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoyageFlow - Luxury Travel Experiences</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --cream: #faf8f5;
+            --dark: #0f0f0f;
+            --gold: #d4af37;
+            --green: #2a5749;
+            --light-gray: #e0dbd2;
+            --text-primary: #0f0f0f;
+            --text-secondary: #6b6b6b;
+            --accent-blue: #4a7c8f;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: var(--cream);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        .nav-header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(250, 248, 245, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(224, 219, 210, 0.3);
+            padding: 1.2rem 2rem;
+            transition: all 0.4s ease;
+        }
+
+        .nav-header.scrolled {
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        }
+
+        .nav-header nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, var(--green) 0%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .page {
+            display: none;
+            min-height: 100vh;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .page.active {
+            display: block;
+            animation: pageSlideIn 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes pageSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 70px;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(42, 87, 73, 0.35) 0%, rgba(212, 175, 55, 0.15) 100%);
+            z-index: 2;
+            transition: opacity 0.6s ease;
+        }
+
+        .hero-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            animation: heroZoom 1.2s ease-out;
+        }
+
+        @keyframes heroZoom {
+            from {
+                transform: scale(1.05);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            color: white;
+            padding: 2rem;
+            animation: textFade 1s ease-out 0.3s both;
+        }
+
+        @keyframes textFade {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-content h1 {
+            font-size: 6.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -2px;
+            text-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            line-height: 1.05;
+            word-spacing: 100vw;
+        }
+
+        .hero-content p {
+            font-size: 1.5rem;
+            margin-bottom: 3.5rem;
+            text-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1.2rem 4rem;
+            background: linear-gradient(135deg, var(--green), var(--gold));
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.5s ease;
+            z-index: -1;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 60px rgba(212, 175, 55, 0.4);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 7rem 2rem;
+        }
+
+        h2 {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1.5px;
+            word-spacing: 100vw;
+        }
+
+        .section-intro {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            margin-bottom: 4rem;
+            max-width: 750px;
+            line-height: 1.9;
+            font-weight: 300;
+        }
+
+        /* Registration */
+        .registration-container {
+            max-width: 850px;
+            margin: 0 auto;
+            background: white;
+            padding: 5.5rem;
+            position: relative;
+            z-index: 10;
+            margin-top: -140px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.12);
+            border-radius: 4px;
+            animation: slideUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group {
+            margin-bottom: 2.5rem;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            margin-bottom: 1.2rem;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 1.2rem 0;
+            border: none;
+            border-bottom: 2px solid var(--light-gray);
+            background: transparent;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            color: var(--text-primary);
+            position: relative;
+        }
+
+        input::placeholder {
+            color: rgba(107, 107, 107, 0.5);
+            font-style: italic;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-bottom-color: var(--gold);
+            background: rgba(212, 175, 55, 0.05);
+            padding-left: 0.5rem;
+        }
+
+        input:valid {
+            border-bottom-color: var(--green);
+        }
+
+        .error-message {
+            color: #d32f2f;
+            font-size: 0.75rem;
+            margin-top: 0.6rem;
+            display: none;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-weight: 600;
+            animation: shake 0.3s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .input-error {
+            border-bottom-color: #d32f2f !important;
+        }
+
+        button {
+            width: 100%;
+            padding: 1.3rem;
+            background: linear-gradient(135deg, var(--green), var(--accent-blue));
+            color: white;
+            border: none;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            margin-top: 2.5rem;
+            box-shadow: 0 10px 32px rgba(42, 87, 73, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        button:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        button:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 50px rgba(42, 87, 73, 0.35);
+        }
+
+        /* Destinations Grid */
+        .destinations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 3.5rem;
+            margin: 5rem 0;
+        }
+
+        .destination-card {
+            position: relative;
+            height: 500px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-radius: 4px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .destination-card:hover {
+            transform: translateY(-16px);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
+        }
+
+        .destination-card.selected {
+            border: 4px solid var(--gold);
+            transform: translateY(-12px);
+            box-shadow: 0 30px 80px rgba(212, 175, 55, 0.4);
+        }
+
+        .destination-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .destination-card:hover img {
+            transform: scale(1.12) rotate(1deg);
+        }
+
+        .destination-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.35) 50%, transparent 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 3.5rem;
+            color: white;
+            opacity: 1;
+            transition: opacity 0.4s ease;
+        }
+
+        .destination-card h3 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--gold);
+            letter-spacing: -1px;
+        }
+
+        .destination-card p {
+            font-size: 1.05rem;
+            color: rgba(255, 255, 255, 0.92);
+            line-height: 1.8;
+            font-weight: 300;
+        }
+
+        .selection-indicator {
+            display: none;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--gold);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.5);
+        }
+
+        /* Options */
+        .option-group {
+            margin: 4rem 0;
+            padding: 3.5rem;
+            background: white;
+            border: 1.5px solid var(--light-gray);
+            border-radius: 4px;
+            transition: all 0.4s ease;
+        }
+
+        .option-group:hover {
+            border-color: var(--gold);
+            box-shadow: 0 8px 24px rgba(212, 175, 55, 0.1);
+        }
+
+        .option-group h3 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            margin-bottom: 2.8rem;
+            color: var(--green);
+            letter-spacing: -0.5px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            padding: 2rem;
+            border: 2px solid var(--light-gray);
+            margin-bottom: 1.8rem;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .option-item:hover {
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.08);
+            transform: translateX(8px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.15);
+        }
+
+        .option-item input[type="checkbox"] {
+            width: 24px;
+            height: 24px;
+            margin-right: 2rem;
+            cursor: pointer;
+            accent-color: var(--green);
+            transition: transform 0.3s ease;
+        }
+
+        .option-item input[type="checkbox"]:checked {
+            transform: scale(1.15);
+        }
+
+        .option-label {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .option-label span:first-child {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .price-tag {
+            color: var(--gold);
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+
+        .total-price {
+            position: sticky;
+            bottom: 0;
+            background: linear-gradient(to right, white, rgba(250, 248, 245, 0.98));
+            padding: 2.5rem;
+            border-top: 3px solid var(--green);
+            margin-top: 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.9rem;
+            font-weight: 700;
+            box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .total-price-label {
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.95rem;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 2.5rem;
+            margin-top: 4rem;
+            justify-content: center;
+        }
+
+        .button-group button {
+            flex: 1;
+            max-width: 340px;
+        }
+
+        .summary-box {
+            background: white;
+            padding: 3.8rem;
+            border-left: 5px solid var(--gold);
+            margin: 4rem 0;
+            max-width: 700px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            animation: slideUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .summary-box p {
+            margin: 1.8rem 0;
+            font-size: 1.15rem;
+            display: flex;
+            justify-content: space-between;
+            gap: 2rem;
+        }
+
+        .summary-box strong {
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .thank-you-page {
+            text-align: center;
+        }
+
+        .thank-you-title {
+            font-size: 5rem;
+            font-weight: 700;
+            margin: 3rem 0;
+            letter-spacing: -1.5px;
+            word-spacing: 100vw;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 2.5rem;
+            justify-content: center;
+            margin: 4rem 0;
+        }
+
+        .social-links a {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2.5px solid var(--green);
+            text-decoration: none;
+            color: var(--green);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-weight: 700;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-links a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--green);
+            transition: left 0.4s ease;
+            z-index: -1;
+        }
+
+        .social-links a:hover::before {
+            left: 0;
+        }
+
+        .social-links a:hover {
+            color: white;
+            transform: translateY(-6px);
+            box-shadow: 0 12px 32px rgba(42, 87, 73, 0.3);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            backdrop-filter: blur(12px);
+        }
+
+        .modal.show {
+            display: flex;
+            animation: modalFade 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes modalFade {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            background: white;
+            padding: 5rem;
+            max-width: 700px;
+            text-align: center;
+            border-radius: 4px;
+            box-shadow: 0 40px 120px rgba(0, 0, 0, 0.3);
+            animation: modalSlide 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes modalSlide {
+            from {
+                transform: translateY(-40px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+            margin-bottom: 2rem;
+        }
+
+        .modal-content p {
+            margin-bottom: 2.5rem;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+            line-height: 1.8;
+        }
+
+        .modal-content button {
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 3.2rem;
+            }
+
+            h2 {
+                font-size: 2.5rem;
+            }
+
+            .destinations-grid {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .button-group button {
+                max-width: none;
+            }
+
+            .registration-container {
+                padding: 3rem;
+                margin-top: -80px;
+            }
+
+            .modal-content {
+                padding: 3rem;
+                margin: 1rem;
+            }
+
+            .option-group {
+                padding: 2rem;
+            }
+
+            .total-price {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <div class="nav-header" id="navHeader">
+        <nav>
+            <div class="logo" onclick="goToPage(1); window.scrollTo(0, 0);">VoyageFlow</div>
+        </nav>
+    </div>
+
+    <!-- Page 1: Hero + Registration -->
+    <div class="page active" id="page1">
+        <div class="hero">
+            <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1600&h=1600&fit=crop" alt="Luxury Travel" class="hero-bg">
+            <div class="hero-content">
+                <h1>Voyage Flow</h1>
+                <p>Curated Luxury Travel Experiences Tailored For You</p>
+                <button class="cta-button" onclick="scrollToForm()">Begin Your Journey</button>
+            </div>
+        </div>
+
+        <div class="registration-container">
+            <h2 style="text-align: center; font-size: 3rem; margin-top: 0;">Join The Elite Circle</h2>
+            <p style="text-align: center; color: var(--text-secondary); margin-bottom: 3.5rem; font-size: 1.1rem; font-weight: 300;">Access curated luxury travel experiences reserved for discerning travelers</p>
+            
+            <form id="regForm">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" placeholder="Enter your full name" required>
+                    <div class="error-message" id="fullNameError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="your@email.com" required>
+                    <div class="error-message" id="emailError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone (10 digits)</label>
+                    <input type="text" id="phone" placeholder="1234567890" maxlength="10">
+                    <div class="error-message" id="phoneError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="pin">PIN (6 digits)</label>
+                    <input type="text" id="pin" placeholder="000000" maxlength="6">
+                    <div class="error-message" id="pinError"></div>
+                </div>
+
+                <button type="submit">Unlock Experiences</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Page 2: Destinations -->
+    <div class="page" id="page2">
+        <div class="container" style="padding-top: 9rem;">
+            <h2>Curated Destinations</h2>
+            <p class="section-intro">Discover handpicked locations that define luxury travel. Each destination offers unparalleled experiences and unforgettable moments. <strong>Select your destination to continue.</strong></p>
+
+            <div class="destinations-grid">
+                <div class="destination-card" onclick="selectDestination('Paris', this)">
+                    <input type="radio" name="destination" value="Paris" style="display: none;">
+                    <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=700&h=700&fit=crop" alt="Paris">
+                    <div class="destination-overlay">
+                        <h3>Paris</h3>
+                        <p>Timeless elegance meets culinary excellence in the City of Light.</p>
+                    </div>
+                    <div class="selection-indicator">✓ Selected</div>
+                </div>
+
+                <div class="destination-card" onclick="selectDestination('Tokyo', this)">
+                    <input type="radio" name="destination" value="Tokyo" style="display: none;">
+                    <img src="https://images.unsplash.com/photo-1540959375944-7049f642e9a4?w=700&h=700&fit=crop" alt="Tokyo">
+                    <div class="destination-overlay">
+                        <h3>Tokyo</h3>
+                        <p>Where ancient traditions seamlessly blend with cutting-edge modernity.</p>
+                    </div>
+                    <div class="selection-indicator">✓ Selected</div>
+                </div>
+
+                <div class="destination-card" onclick="selectDestination('Rome', this)">
+                    <input type="radio" name="destination" value="Rome" style="display: none;">
+                    <img src="https://images.unsplash.com/photo-1552832860-cfbe67d1d740?w=700&h=700&fit=crop" alt="Rome">
+                    <div class="destination-overlay">
+                        <h3>Rome</h3>
+                        <p>Walk through history in the Eternal City's timeless streets.</p>
+                    </div>
+                    <div class="selection-indicator">✓ Selected</div>
+                </div>
+
+                <div class="destination-card" onclick="selectDestination('Dubai', this)">
+                    <input type="radio" name="destination" value="Dubai" style="display: none;">
+                    <img src="https://images.unsplash.com/photo-1512453475632-a1b6b32a30ff?w=700&h=700&fit=crop" alt="Dubai">
+                    <div class="destination-overlay">
+                        <h3>Dubai</h3>
+                        <p>Opulence and innovation converge in the desert's gleaming skyline.</p>
+                    </div>
+                    <div class="selection-indicator">✓ Selected</div>
+                </div>
+
+                <div class="destination-card" onclick="selectDestination('New York', this)">
+                    <input type="radio" name="destination" value="New York" style="display: none;">
+                    <img src="https://images.unsplash.com/photo-1560707303-4e980ce876ad?w=700&h=700&fit=crop" alt="New York">
+                    <div class="destination-overlay">
+                        <h3>New York</h3>
+                        <p>Energy and sophistication define the city that never sleeps.</p>
+                    </div>
+                    <div class="selection-indicator">✓ Selected</div>
+                </div>
+
+                <div class="destination-card" onclick="selectDestination('Bali', this)">
+                    <input type="radio" name="destination" value="Bali" style="display: none;">
+                    <img src="https://images.unsplash.com/photo-1520884917802-35a826b28c98?w=700&h=700&fit=crop" alt="Bali">
+                    <div class="destination-overlay">
+                        <h3>Bali</h3>
+                        <p>Tropical paradise with pristine beaches and spiritual serenity.</p>
+                    </div>
+                    <div class="selection-indicator">✓ Selected</div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 5rem;">
+                <button class="cta-button" onclick="proceedToBooking()" style="background: linear-gradient(135deg, var(--green), var(--accent-blue));">Customize Your Experience</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 3: Booking -->
+    <div class="page" id="page3">
+        <div class="container" style="padding-top: 9rem;">
+            <h2>Design Your Journey</h2>
+            <p class="section-intro">Personalize every element of your luxury escape. Real-time pricing reflects your selections as you craft the perfect itinerary.</p>
+
+            <div class="option-group">
+                <h3>Premium Flight Selection</h3>
+                <div class="option-item">
+                    <input type="checkbox" class="price-option" data-price="300">
+                    <label class="option-label">
+                        <span>Economy Class</span>
+                        <span class="price-tag">$300</span>
+                    </label>
+                </div>
+                <div class="option-item">
+                    <input type="checkbox" class="price-option" data-price="600">
+                    <label class="option-label">
+                        <span>Business Class</span>
+                        <span class="price-tag">$600</span>
+                    </label>
+                </div>
+                <div class="option-item">
+                    <input type="checkbox" class="price-option" data-price="1200">
+                    <label class="option-label">
+                        <span>First Class</span>
+                        <span class="price-tag">$1,200</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="option-group">
+                <h3>Luxury Accommodation</h3>
+                <div class="option-item">
+                    <input type="checkbox" class="price-option" data-price="80">
+                    <label class="option-label">
+                        <span>Boutique Hotel — 3-star</span>
+                        <span class="price-tag">$80/night</span>
+                    </label>
+                </div>
+                <div class="option-item">
+                    <input type="checkbox" class="price-option" data-price="150">
+                    <label class="option-label">
+                        <span>Luxury Resort — 5-star</span>
+                        <span class="price-tag">$150/night</span>
+                    </label>
+                </div>
+                <div class="option-item">
+                    <input type="checkbox" class="price-option" data-price="120">
+                    <label class="option-label">
+                        <span>Premier Suite — 5-star</span>
+                        <span class="price-tag">$120/night</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="option-group">
+                <h3>Gastronomic Experiences</h3>
+                <div class="option-item">
+                    <input type="checkbox" class="price-option" data-price="200">
+                    <label class="option-label">
+                        <span>Street Food Culinary Tour</span>
+                        <span class="price-tag">$200</span>
+                    </label>
+                </div>
+                <div class="option-item">
+                    <input type="checkbox" class="price-option" data-price="350">
+                    <label class="option-label">
+                        <span>Michelin-Starred Fine Dining</span>
+                        <span class="price-tag">$350</span>
+                    </label>
+                </div>
+                <div class="option-item">
+                    <input type="checkbox" class="price-option" data-price="150">
+                    <label class="option-label">
+                        <span>Authentic Local Cuisine</span>
+                        <span class="price-tag">$150</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="option-group">
+                <h3>Adventure & Cultural Immersion</h3>
+                <div class="option-item">
+                    <input type="checkbox" class="price-option" data-price="100">
+                    <label class="option-label">
+                        <span>Private City Walking Tour</span>
+                        <span class="price-tag">$100</span>
+                    </label>
+                </div>
+                <div class="option-item">
+                    <input type="checkbox" class="price-option" data-price="180">
+                    <label class="option-label">
+                        <span>Adventure Sports Package</span>
+                        <span class="price-tag">$180</span>
+                    </label>
+                </div>
+                <div class="option-item">
+                    <input type="checkbox" class="price-option" data-price="120">
+                    <label class="option-label">
+                        <span>Museums & Cultural Pass</span>
+                        <span class="price-tag">$120</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="total-price">
+                <span class="total-price-label">Total Investment</span>
+                <span style="color: var(--gold);">$<span id="totalPrice">0</span></span>
+            </div>
+
+            <div class="button-group">
+                <button onclick="goToPage(2)">Back To Destinations</button>
+                <button onclick="confirmBooking()" style="background: linear-gradient(135deg, var(--green), var(--accent-blue));">Reserve Now</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 4: Confirmation -->
+    <div class="page thank-you-page" id="page4">
+        <div class="hero" style="height: 55vh; margin-top: 70px;">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1600&h=900&fit=crop" alt="Celebration" class="hero-bg">
+        </div>
+
+        <div class="container">
+            <h2 class="thank-you-title">Your Adventure Awaits</h2>
+            <p class="section-intro" style="text-align: center; max-width: 100%; font-size: 1.2rem;">Your luxury travel experience has been confirmed. Prepare for an unforgettable journey that will redefine your travel expectations.</p>
+            
+            <div class="summary-box" style="margin: 4rem auto; max-width: 700px;">
+                <p><strong>Booking Status:</strong> <span style="color: var(--green); font-weight: 700;">✓ Confirmed</span></p>
+                <p><strong>Guest Name:</strong> <span id="summaryName">—</span></p>
+                <p><strong>Email:</strong> <span id="summaryEmail">—</span></p>
+                <p><strong>Destination:</strong> <span id="summaryDestination" style="color: var(--green); font-weight: 700;">—</span></p>
+                <p style="border-top: 2px solid var(--light-gray); padding-top: 1.8rem; margin-top: 1.8rem;"><strong>Total Investment:</strong> <span style="color: var(--gold); font-size: 1.4rem; font-weight: 700;">$<span id="summaryPrice">0</span></span></p>
+            </div>
+
+            <p style="text-align: center; margin: 3rem 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-secondary); font-weight: 300;">Share Your Excitement</p>
+            <div class="social-links">
+                <a href="#">f</a>
+                <a href="#">X</a>
+                <a href="#">I</a>
+            </div>
+
+            <div style="text-align: center; margin-top: 4rem;">
+                <button onclick="startOver()" class="cta-button" style="max-width: 340px; background: linear-gradient(135deg, var(--green), var(--accent-blue));">Plan Another Journey</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <h2>Welcome to VoyageFlow</h2>
+            <p id="modalMessage">Your registration has been confirmed. Explore our finest destinations.</p>
+            <button onclick="closeSuccessModal()">Explore Destinations</button>
+        </div>
+    </div>
+
+    <div class="modal" id="bookingModal">
+        <div class="modal-content">
+            <h2>Reservation Confirmed</h2>
+            <p>Your luxury travel itinerary has been secured. We're preparing your exclusive experience.</p>
+            <button onclick="closeBookingModal()">View Confirmation</button>
+        </div>
+    </div>
+
+    <script>
+        const regForm = document.getElementById('regForm');
+        const navHeader = document.getElementById('navHeader');
+        let formData = {};
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navHeader.classList.add('scrolled');
+            } else {
+                navHeader.classList.remove('scrolled');
+            }
+        });
+
+        regForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (validateForm()) {
+                formData.name = document.getElementById('fullName').value;
+                formData.email = document.getElementById('email').value;
+                document.getElementById('modalMessage').textContent = `Welcome, ${formData.name}! Explore our finest destinations.`;
+                document.getElementById('successModal').classList.add('show');
+            }
+        });
+
+        function validateForm() {
+            clearErrors();
+            let isValid = true;
+
+            const fullName = document.getElementById('fullName').value.trim();
+            if (!fullName) {
+                showError('fullName', 'Full name required');
+                isValid = false;
+            }
+
+            const email = document.getElementById('email').value.trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email) {
+                showError('email', 'Email required');
+                isValid = false;
+            } else if (!emailRegex.test(email)) {
+                showError('email', 'Valid email required');
+                isValid = false;
+            }
+
+            const phone = document.getElementById('phone').value.trim();
+            if (!phone) {
+                showError('phone', 'Phone required');
+                isValid = false;
+            } else if (!/^\d{10}$/.test(phone)) {
+                showError('phone', '10 digits required');
+                isValid = false;
+            }
+
+            const pin = document.getElementById('pin').value.trim();
+            if (!pin) {
+                showError('pin', 'PIN required');
+                isValid = false;
+            } else if (!/^\d{6}$/.test(pin)) {
+                showError('pin', '6 digits required');
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        function showError(fieldId, message) {
+            const field = document.getElementById(fieldId);
+            const errorElement = document.getElementById(fieldId + 'Error');
+            field.classList.add('input-error');
+            errorElement.textContent = message;
+            errorElement.classList.add('show');
+        }
+
+        function clearErrors() {
+            document.querySelectorAll('.error-message').forEach(msg => msg.classList.remove('show'));
+            document.querySelectorAll('input').forEach(input => input.classList.remove('input-error'));
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('successModal').classList.remove('show');
+            goToPage(2);
+        }
+
+        function closeBookingModal() {
+            document.getElementById('bookingModal').classList.remove('show');
+            document.getElementById('summaryName').textContent = formData.name || '—';
+            document.getElementById('summaryEmail').textContent = formData.email || '—';
+            document.getElementById('summaryDestination').textContent = formData.destination || '—';
+            document.getElementById('summaryPrice').textContent = formData.totalPrice || '0';
+            goToPage(4);
+        }
+
+        function selectDestination(destinationName, cardElement) {
+            document.querySelectorAll('.destination-card').forEach(card => {
+                card.classList.remove('selected');
+                card.querySelector('.selection-indicator').style.display = 'none';
+            });
+            
+            cardElement.classList.add('selected');
+            cardElement.querySelector('.selection-indicator').style.display = 'block';
+            cardElement.querySelector('input[type="radio"]').checked = true;
+            
+            formData.destination = destinationName;
+        }
+
+        function proceedToBooking() {
+            if (!formData.destination) {
+                alert('Please select a destination before proceeding to booking options.');
+                return;
+            }
+            goToPage(3);
+        }
+
+        function goToPage(pageNumber) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById('page' + pageNumber).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function scrollToForm() {
+            document.getElementById('regForm').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        const priceOptions = document.querySelectorAll('.price-option');
+        priceOptions.forEach(option => {
+            option.addEventListener('change', updateTotalPrice);
+        });
+
+        function updateTotalPrice() {
+            let total = 0;
+            priceOptions.forEach(option => {
+                if (option.checked) {
+                    total += parseInt(option.dataset.price);
+                }
+            });
+            document.getElementById('totalPrice').textContent = total.toLocaleString();
+        }
+
+        function confirmBooking() {
+            const checkedItems = document.querySelectorAll('.price-option:checked');
+            if (checkedItems.length === 0) {
+                alert('Select at least one option to proceed.');
+                return;
+            }
+            const total = document.getElementById('totalPrice').textContent;
+            formData.totalPrice = total;
+            document.getElementById('bookingModal').classList.add('show');
+        }
+
+        function startOver() {
+            regForm.reset();
+            formData = {};
+            clearErrors();
+            
+            document.querySelectorAll('.destination-card').forEach(card => {
+                card.classList.remove('selected');
+                card.querySelector('.selection-indicator').style.display = 'none';
+                card.querySelector('input[type="radio"]').checked = false;
+            });
+            
+            document.querySelectorAll('.price-option').forEach(option => {
+                option.checked = false;
+            });
+            updateTotalPrice();
+            
+            goToPage(1);
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>
